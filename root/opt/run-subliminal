@@ -2,7 +2,7 @@
 const exec = require('child_process').exec;
 
 const subDir = '/config/sub-cache';
-const pathEnvName = 'sonarr_moviefile_path';
+const pathEnvName = 'sonarr_episodefile_path';
 
 console.log('env: ', JSON.stringify(process.env));
 
