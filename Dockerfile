@@ -5,6 +5,10 @@ MAINTAINER sparklyballs
 ARG DEBIAN_FRONTEND="noninteractive"
 ENV XDG_CONFIG_HOME="/config/xdg"
 
+# set env variables needed for subliminal to run
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+
 # add sonarr repository
 RUN \
  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FDA5DFFC && \
@@ -15,7 +19,13 @@ RUN \
  apt-get update && \
  apt-get install -y \
 	libcurl3 \
-	nzbdrone && \
+	nzbdrone \
+	python3 \
+	python3-pip \
+	nodejs && \
+
+# install subliminal
+ pip3 install subliminal && \
 
 # cleanup
  apt-get clean && \
@@ -26,6 +36,9 @@ RUN \
 
 # add local files
 COPY root/ /
+
+# set run-subliminal permissions
+RUN chmod +x /opt/run-subliminal
 
 # ports and volumes
 EXPOSE 8989
