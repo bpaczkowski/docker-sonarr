@@ -22,7 +22,8 @@ RUN \
 	nzbdrone \
 	python3 \
 	python3-pip \
-	nodejs && \
+	nodejs \
+	at && \
 
 # install subliminal
  pip3 install subliminal && \
