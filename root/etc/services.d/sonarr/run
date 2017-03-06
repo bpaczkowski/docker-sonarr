@@ -1,6 +1,6 @@
 #!/usr/bin/with-contenv bash
 
-umask 022
+umask 000
 
 cd /opt/NzbDrone || exit
 
