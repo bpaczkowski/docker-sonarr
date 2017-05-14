@@ -1,4 +1,4 @@
-FROM lsiobase/xenial
+FROM lsiobase/mono
 MAINTAINER sparklyballs
 
 # set environment variables
@@ -18,7 +18,6 @@ RUN \
 # install packages
  apt-get update && \
  apt-get install -y \
-	libcurl3 \
 	nzbdrone \
 	python3 \
 	python3-pip \

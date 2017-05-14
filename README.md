@@ -2,6 +2,8 @@
 [forumurl]: https://forum.linuxserver.io
 [ircurl]: https://www.linuxserver.io/irc/
 [podcasturl]: https://www.linuxserver.io/podcast/
+[appurl]: https://sonarr.tv/
+[hub]: https://hub.docker.com/r/linuxserver/sonarr/
 
 [![linuxserver.io](https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/linuxserver_medium.png)][linuxserverurl]
 
@@ -13,12 +15,10 @@ The [LinuxServer.io][linuxserverurl] team brings you another container release f
 # linuxserver/sonarr
 
 [![](https://images.microbadger.com/badges/image/linuxserver/sonarr.svg)](http://microbadger.com/images/linuxserver/sonarr "Get your own image badge on microbadger.com")[![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/sonarr.svg)][hub][![Docker Stars](https://img.shields.io/docker/stars/linuxserver/sonarr.svg)][hub][![Build Status](http://jenkins.linuxserver.io:8080/buildStatus/icon?job=Dockers/LinuxServer.io-hub-built/linuxserver-sonarr)](http://jenkins.linuxserver.io:8080/job/Dockers/job/LinuxServer.io-hub-built/job/linuxserver-sonarr/)
-[hub]: https://hub.docker.com/r/linuxserver/sonarr/
 
 [Sonarr](https://sonarr.tv/) (formerly NZBdrone) is a PVR for usenet and bittorrent users. It can monitor multiple RSS feeds for new episodes of your favorite shows and will grab, sort and rename them. It can also be configured to automatically upgrade the quality of files already downloaded when a better quality format becomes available.
 
-[![sonarr](https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/sonarr-banner.png)][sonarrurl]
-[sonarrurl]: https://sonarr.tv/
+[![sonarr](https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/sonarr-banner.png)][appurl]
 
 ## Usage
 
@@ -27,12 +27,20 @@ docker create \
 	--name sonarr \
 	-p 8989:8989 \
 	-e PUID=<UID> -e PGID=<GID> \
-	-v /dev/rtc:/dev/rtc:ro \
+	-e TZ=<timezone> \ 
+	-v /etc/localtime:/etc/localtime:ro \
 	-v </path/to/appdata>:/config \
 	-v <path/to/tvseries>:/tv \
 	-v <path/to/downloadclient-downloads>:/downloads \
 	linuxserver/sonarr
 ```
+
+You can choose between ,using tags, various branch versions of sonarr, no tag is required to remain on the main branch.
+
+Add one of the tags,  if required,  to the linuxserver/sonarr line of the run/create command in the following format, linuxserver/sonarr:develop
+
+#### Tags
++ **develop**
 
 ## Parameters
 
@@ -43,13 +51,18 @@ http://192.168.x.x:8080 would show you what's running INSIDE the container on po
 
 
 * `-p 8989` - the port sonarr webinterface
-* `-v /dev/rtc:/dev/rtc:ro` - map hwclock as ReadOnly (mono throws exceptions otherwise)
 * `-v /config` - database and sonarr configs
 * `-v /tv` - location of TV library on disk
+* `-v /etc/localtime` for timesync - see [Localtime](#localtime) for important information
+* `-e TZ` for timezone information, Europe/London - see [Localtime](#localtime) for important information
 * `-e PGID` for for GroupID - see below for explanation
 * `-e PUID` for for UserID - see below for explanation
 
 It is based on ubuntu xenial with S6 overlay, for shell access whilst the container is running do `docker exec -it sonarr /bin/bash`.
+
+## Localtime
+
+It is important that you either set `-v /etc/localtime:/etc/localtime:ro` or the TZ variable, mono will throw exceptions without one of them set.
 
 ### User / Group Identifiers
 
@@ -71,6 +84,9 @@ Access the webui at `<your-ip>:8989`, for more information check out [Sonarr](ht
 
 ## Changelog
 
++ **17.04.17:** Switch to using inhouse mono baseimage, adds python also.
++ **14.04.17:** Change to mount /etc/localtime in README, thanks cbgj.
++ **13.04.17:** Switch to official mono repository.
 + **30.09.16:** Fix umask
 + **23.09.16:** Add cd to /opt fixes redirects with althub (issue #25)
 , make XDG config environment variable
