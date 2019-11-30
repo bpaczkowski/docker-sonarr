@@ -1,4 +1,4 @@
-FROM lsiobase/mono:LTS
+FROM lsiobase/mono:arm64v8-LTS
 
 # set version label
 ARG BUILD_DATE
@@ -12,19 +12,11 @@ ARG DEBIAN_FRONTEND="noninteractive"
 ENV XDG_CONFIG_HOME="/config/xdg"
 ENV SONARR_BRANCH="master"
 
-# set env variables needed for subliminal to run
-ENV LC_ALL=C.UTF-8
-ENV LANG=C.UTF-8
-
 RUN \
  echo "**** install packages ****" && \
  apt-get update && \
  apt-get install -y \
-        jq \
-        python3 \
-        python3-pip \
-        nodejs \
-        at && \
+        jq && \
  echo "**** install sonarr ****" && \
  mkdir -p /opt/NzbDrone && \
   if [ -z ${SONARR_VERSION+x} ]; then \
@@ -37,22 +29,15 @@ RUN \
  tar xf \
 	/tmp/sonarr.tar.gz -C \
 	/opt/NzbDrone --strip-components=1 && \
-
- echo "*** install busliminal ****" && \
- pip3 install subliminal && \
-
  echo "**** cleanup ****" && \
  apt-get clean && \
  rm -rf \
 	/tmp/* \
 	/var/tmp/*
 
-# add local files
+# add local files
 COPY root/ /
 
-# set run-subliminal permissions
-RUN chmod +x /opt/run-subliminal
-
-# ports and volumes
+# ports and volumes
 EXPOSE 8989
 VOLUME /config
