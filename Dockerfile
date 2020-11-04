@@ -1,11 +1,11 @@
-FROM lsiobase/mono:LTS
+FROM ghcr.io/linuxserver/baseimage-mono:LTS
 
 # set version label
 ARG BUILD_DATE
 ARG VERSION
 ARG SONARR_VERSION
 LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
-LABEL maintainer="sparklyballs"
+LABEL maintainer="aptalca"
 
 # set environment variables
 ARG DEBIAN_FRONTEND="noninteractive"
@@ -26,7 +26,7 @@ RUN \
         nodejs \
         at && \
  echo "**** install sonarr ****" && \
- mkdir -p /opt/NzbDrone && \
+ mkdir -p /app/sonarr/bin && \
   if [ -z ${SONARR_VERSION+x} ]; then \
 	SONARR_VERSION=$(curl -sX GET https://services.sonarr.tv/v1/download/${SONARR_BRANCH} \
 	| jq -r '.version'); \
@@ -36,23 +36,21 @@ RUN \
 	"https://download.sonarr.tv/v2/${SONARR_BRANCH}/mono/NzbDrone.${SONARR_BRANCH}.${SONARR_VERSION}.mono.tar.gz" && \
  tar xf \
 	/tmp/sonarr.tar.gz -C \
-	/opt/NzbDrone --strip-components=1 && \
-
- echo "*** install busliminal ****" && \
+	/app/sonarr/bin --strip-components=1 && \
+ echo "*** install subliminal ****" && \
  pip3 install subliminal && \
-
  echo "**** cleanup ****" && \
  apt-get clean && \
  rm -rf \
 	/tmp/* \
 	/var/tmp/*
 
-# add local files
+# add local files
 COPY root/ /
 
 # set run-subliminal permissions
 RUN chmod +x /opt/run-subliminal
 
-# ports and volumes
+# ports and volumes
 EXPOSE 8989
 VOLUME /config
