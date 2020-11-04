@@ -39,7 +39,7 @@ RUN \
 	/opt/NzbDrone --strip-components=1 && \
 
  echo "*** install busliminal ****" && \
- pip3 install subliminal==2.0.5 && \
+ pip3 install subliminal && \
 
  echo "**** cleanup ****" && \
  apt-get clean && \
